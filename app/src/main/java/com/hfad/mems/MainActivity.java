@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
-                textView3.setText(answerHTTP);
+              //  textView3.setText(answerHTTP);
                 JSONObject json = new JSONObject(answerHTTP);
                 JSONArray urls = json.getJSONArray("response");
                 for (int i = 0; i<urls.length();i++){
@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
                     listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
                 }
-
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
