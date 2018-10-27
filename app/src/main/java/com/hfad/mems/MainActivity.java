@@ -85,26 +85,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            try {
-              //  textView3.setText(answerHTTP);
-                JSONObject json = new JSONObject(answerHTTP);
-                JSONArray urls = json.getJSONArray("response");
-                for (int i = 0; i<urls.length();i++){
-                    HashMap<String,Object> hm;
-                    hm = new HashMap<String, Object>();
-                    hm.put(FIRST,urls.getJSONObject(i).getString("link_fullsize").toString());
-                    hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
-                    myBooks.add(hm);
-                    SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
-                            new String[] { FIRST, LAST, }, new int[] { R.id.text1, R.id.text2 });
-                    listView.setAdapter(adapter);
-                    listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+             textView3.setText(answerHTTP);
 
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
 
 
@@ -134,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 urlConnection.disconnect();
             }
         }
-
         return response;
     }
 
@@ -156,6 +137,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String convertInputStreamToString(InputStream in) {
+        try {
+            String json1 = in.getStr
+            JSONObject json = new JSONObject(in.toString());
+            JSONArray urls = json.getJSONArray("response");
+            for (int i = 0; i<urls.length();i++){
+                HashMap<String,Object> hm;
+                hm = new HashMap<String, Object>();
+                hm.put(FIRST,urls.getJSONObject(i).getString("link_preview").toString());
+                hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
+                myBooks.add(hm);
+                SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
+                        new String[] { FIRST, LAST}, new int[] { R.id.text1, R.id.text2 });
+                listView.setAdapter(adapter);
+                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         BufferedReader reader = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
         return response.toString();
     }
 }
