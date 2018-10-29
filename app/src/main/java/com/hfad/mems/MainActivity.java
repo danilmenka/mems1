@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Button button;
     private String date;
-    private ListView listView;
-    private TextView textView3;
+  //  private ListView listView;
+   // private TextView textView3;
     private static ArrayList<HashMap<String, Object>> myBooks;
     private static final String FIRST = "firstname";
     private static final String LAST = "lastname";
-    private List<MemePreview> memesPreview;
+    private ArrayList<MemePreview> memesPreview;
     private ProgressDialog dialog;
 
     @Override
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = (Button)findViewById(R.id.button);
-        listView = (ListView)findViewById(R.id.list);
-        textView3 = (TextView)findViewById(R.id.textView3);
+      //  listView = (ListView)findViewById(R.id.list);
+      //   textView3 = (TextView)findViewById(R.id.textView3);
 
         myBooks = new ArrayList<HashMap<String, Object>>();
         memesPreview = new ArrayList<>();
@@ -66,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     class MyAsyncTask extends AsyncTask<String, String, String> {
 
-        String a, b, answerHTTP;
-
+        String answerHTTP;
         String server = "http://memeswithyou.site/memes/server.php";
 
         @Override
@@ -86,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String, String> postDataParams = new HashMap<String, String>();
             postDataParams.put("request", "main_screen");
             postDataParams.put("date", date);
-
             answerHTTP = performGetCall(server, postDataParams);
 
             return null;
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             super.onPostExecute(result);
             JSONURL(answerHTTP);
-            textView3.setText(textView3.getText());
+
         }
     }
 
@@ -192,18 +190,15 @@ public class MainActivity extends AppCompatActivity {
                 textView3.setText(a);*/
                 //a = myBooks.get("firstname").toString();
 
-                ImageView imageView = (ImageView)findViewById(R.id.imageView);
+                //ImageView imageView = (ImageView)findViewById(R.id.imageView);
                // Picasso.with(MainActivity.this).load(a).into(imageView);
 
                 //дальше добавляем полученные параметры в наш адаптер
-                SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
+              /*  SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
                         new String[] { FIRST, LAST }, new int[] { R.id.text1, R.id.text2 });
-
-
                 //выводим в листвбю
                 listView.setAdapter(adapter);
-                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
+                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);*/
 
             }
         } catch (JSONException e) {
