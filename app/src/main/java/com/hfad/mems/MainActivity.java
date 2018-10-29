@@ -1,18 +1,18 @@
 package com.hfad.mems;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,11 +22,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private String date;
     private ListView listView;
     private TextView textView3;
-    public static String JsonURL;
     private static ArrayList<HashMap<String, Object>> myBooks;
     private static final String FIRST = "firstname";
     private static final String LAST = "lastname";
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button);
         listView = (ListView)findViewById(R.id.list);
         textView3 = (TextView)findViewById(R.id.textView3);
+        myBooks = new ArrayList<HashMap<String, Object>>();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             date=(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
-           // date=LocalDate.now();
-            a = "1";
-            b = "1";
+            dialog = new ProgressDialog(MainActivity.this);
+            dialog.setMessage("Загрузка...");
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(true);
+            dialog.show();
             super.onPreExecute();
         }
 
@@ -84,12 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            dialog.dismiss();
             super.onPostExecute(result);
-             textView3.setText(answerHTTP);
-
-
-
-
+            JSONURL(answerHTTP);
         }
     }
 
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String convertInputStreamToString(InputStream in) {
         try {
-            String json1 = in.getStr
+          //  String json1 = in.getStr
             JSONObject json = new JSONObject(in.toString());
             JSONArray urls = json.getJSONArray("response");
             for (int i = 0; i<urls.length();i++){
@@ -179,5 +177,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return response.toString();
+    }
+
+    public void JSONURL(String result) {
+
+        try {
+            //создали читателя json объектов и отдали ему строку - result
+            JSONObject json = new JSONObject(result);
+            //дальше находим вход в наш json им является ключевое слово data
+            JSONArray urls = json.getJSONArray("response");
+            //проходим циклом по всем нашим параметрам
+            for (int i = 0; i < urls.length(); i++) {
+                HashMap<String, Object> hm;
+                hm = new HashMap<String, Object>();
+                //читаем что в себе хранит параметр firstname
+                hm.put(FIRST, urls.getJSONObject(i).getString("link_preview").toString());
+                //читаем что в себе хранит параметр lastname
+                hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
+                myBooks.add(hm);
+                //дальше добавляем полученные параметры в наш адаптер
+                SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
+                        new String[] { FIRST, LAST, }, new int[] { R.id.text1, R.id.text2 });
+                //выводим в листвбю
+                listView.setAdapter(adapter);
+                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+            }
+        } catch (JSONException e) {
+            Log.e("log_tag", "Error parsing data " + e.toString());
+        }
     }
 }
