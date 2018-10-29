@@ -7,9 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +25,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<HashMap<String, Object>> myBooks;
     private static final String FIRST = "firstname";
     private static final String LAST = "lastname";
+    private List<MemePreview> memesPreview;
     private ProgressDialog dialog;
 
     @Override
@@ -46,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button);
         listView = (ListView)findViewById(R.id.list);
         textView3 = (TextView)findViewById(R.id.textView3);
+
         myBooks = new ArrayList<HashMap<String, Object>>();
+        memesPreview = new ArrayList<>();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             super.onPostExecute(result);
             JSONURL(answerHTTP);
+            textView3.setText(textView3.getText());
         }
     }
 
@@ -135,27 +145,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String convertInputStreamToString(InputStream in) {
-        try {
-          //  String json1 = in.getStr
-            JSONObject json = new JSONObject(in.toString());
-            JSONArray urls = json.getJSONArray("response");
-            for (int i = 0; i<urls.length();i++){
-                HashMap<String,Object> hm;
-                hm = new HashMap<String, Object>();
-                hm.put(FIRST,urls.getJSONObject(i).getString("link_preview").toString());
-                hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
-                myBooks.add(hm);
-                SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
-                        new String[] { FIRST, LAST}, new int[] { R.id.text1, R.id.text2 });
-                listView.setAdapter(adapter);
-                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         BufferedReader reader = null;
         StringBuffer response = new StringBuffer();
         try {
@@ -186,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(result);
             //дальше находим вход в наш json им является ключевое слово data
             JSONArray urls = json.getJSONArray("response");
+
             //проходим циклом по всем нашим параметрам
             for (int i = 0; i < urls.length(); i++) {
                 HashMap<String, Object> hm;
@@ -195,16 +185,38 @@ public class MainActivity extends AppCompatActivity {
                 //читаем что в себе хранит параметр lastname
                 hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
                 myBooks.add(hm);
+                memesPreview.add(new MemePreview(hm.get(FIRST).toString(),hm.get(LAST).toString()));
+/*
+                String a;
+                a = hm.get(FIRST).toString();
+                textView3.setText(a);*/
+                //a = myBooks.get("firstname").toString();
+
+                ImageView imageView = (ImageView)findViewById(R.id.imageView);
+               // Picasso.with(MainActivity.this).load(a).into(imageView);
+
                 //дальше добавляем полученные параметры в наш адаптер
                 SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
-                        new String[] { FIRST, LAST, }, new int[] { R.id.text1, R.id.text2 });
+                        new String[] { FIRST, LAST }, new int[] { R.id.text1, R.id.text2 });
+
+
                 //выводим в листвбю
                 listView.setAdapter(adapter);
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
 
             }
         } catch (JSONException e) {
             Log.e("log_tag", "Error parsing data " + e.toString());
         }
+    }
+    public class MemePreview {
+        String nameImgPreview;
+        String datePreview;
+        MemePreview(String nameImgPreview,String datePreview){
+            this.nameImgPreview = nameImgPreview;
+            this.datePreview = datePreview;
+        }
+
     }
 }
