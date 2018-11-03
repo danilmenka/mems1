@@ -24,11 +24,11 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/list"
+        android:id="@+id/recycler"
         >
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -1,10 +1,15 @@
 package com.hfad.mems;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String LAST = "lastname";
     private ArrayList<MemePreview> memesPreview;
     private ProgressDialog dialog;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        recyclerView = findViewById(R.id.recycler);
         button = (Button)findViewById(R.id.button);
       //  listView = (ListView)findViewById(R.id.list);
       //   textView3 = (TextView)findViewById(R.id.textView3);
@@ -60,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new MyAsyncTask().execute();
+              /*  LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                recyclerView.setLayoutManager(layoutManager);*/
             }
         });
     }
@@ -95,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             super.onPostExecute(result);
             JSONURL(answerHTTP);
+            List <String> urls= new ArrayList<>();
+            for (int i=0;i<memesPreview.size();i++){
+                MemePreview memePreview;
+                urls.add( memesPreview.get(i).nameImgPreview);
+            }
+
+            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(this,urls);
 
         }
     }
@@ -205,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("log_tag", "Error parsing data " + e.toString());
         }
     }
+
     public class MemePreview {
         String nameImgPreview;
         String datePreview;

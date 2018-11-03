@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_height="wrap_content">
 
@@ -10,16 +10,11 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-        <TextView android:layout_width="fill_parent"
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text1"
-            android:textSize="25dip"
-            android:text="This is text1"/>
-
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/text2"
-            android:text="This is text2"/>
+            app:srcCompat="@drawable/none" />
 
     </LinearLayout>
 </LinearLayout>
