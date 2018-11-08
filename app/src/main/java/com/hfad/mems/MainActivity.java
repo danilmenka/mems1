@@ -29,11 +29,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     RecyclerView recyclerView;
     List <String> urls = new ArrayList<>();
+    List <String> dates = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(result);
             JSONURL(answerHTTP);
             for (int i=0;i<memesPreview.size();i++){
+                dates.add(memesPreview.get(i).datePreview);
                 urls.add( memesPreview.get(i).nameImgPreview);
             }
-            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(MainActivity.this,urls);
+            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(MainActivity.this,urls,dates);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -119,11 +119,8 @@ public class MainActivity extends AppCompatActivity {
         HttpURLConnection urlConnection = null;
         try {
             url = new URL(requestURL + "?" + getDataString(getDataParams));
-
             urlConnection = (HttpURLConnection) url.openConnection();
-
             int responseCode = urlConnection.getResponseCode();
-
             if(responseCode == HttpURLConnection.HTTP_OK){
                 response = convertInputStreamToString(urlConnection.getInputStream());
             }
@@ -188,11 +185,8 @@ public class MainActivity extends AppCompatActivity {
                 hm = new HashMap<String, Object>();
                 hm.put(FIRST, urls.getJSONObject(i).getString("link_preview").toString());
                 hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
-
                 myBooks.add(hm);
-
                 memesPreview.add(new MemePreview(hm.get(FIRST).toString(),hm.get(LAST).toString()));
-
             }
         } catch (JSONException e) {
             Log.e("log_tag", "Error parsing data " + e.toString());
