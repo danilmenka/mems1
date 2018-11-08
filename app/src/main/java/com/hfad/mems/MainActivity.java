@@ -2,6 +2,7 @@ package com.hfad.mems;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,41 +33,41 @@ import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button button;
     private String date;
-  //  private ListView listView;
-   // private TextView textView3;
     private static ArrayList<HashMap<String, Object>> myBooks;
     private static final String FIRST = "firstname";
     private static final String LAST = "lastname";
     private ArrayList<MemePreview> memesPreview;
     private ProgressDialog dialog;
     RecyclerView recyclerView;
-
+    List <String> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler);
         button = (Button)findViewById(R.id.button);
-      //  listView = (ListView)findViewById(R.id.list);
-      //   textView3 = (TextView)findViewById(R.id.textView3);
 
         myBooks = new ArrayList<HashMap<String, Object>>();
         memesPreview = new ArrayList<>();
+       LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MyAsyncTask().execute();
-              /*  LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                recyclerView.setLayoutManager(layoutManager);*/
+
             }
         });
     }
@@ -104,14 +103,11 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             super.onPostExecute(result);
             JSONURL(answerHTTP);
-            List <String> urls= new ArrayList<>();
             for (int i=0;i<memesPreview.size();i++){
-                MemePreview memePreview;
                 urls.add( memesPreview.get(i).nameImgPreview);
             }
-
-            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(this,urls);
-
+            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(MainActivity.this,urls);
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -185,36 +181,17 @@ public class MainActivity extends AppCompatActivity {
     public void JSONURL(String result) {
 
         try {
-            //создали читателя json объектов и отдали ему строку - result
             JSONObject json = new JSONObject(result);
-            //дальше находим вход в наш json им является ключевое слово data
             JSONArray urls = json.getJSONArray("response");
-
-            //проходим циклом по всем нашим параметрам
             for (int i = 0; i < urls.length(); i++) {
                 HashMap<String, Object> hm;
                 hm = new HashMap<String, Object>();
-                //читаем что в себе хранит параметр firstname
                 hm.put(FIRST, urls.getJSONObject(i).getString("link_preview").toString());
-                //читаем что в себе хранит параметр lastname
                 hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
+
                 myBooks.add(hm);
+
                 memesPreview.add(new MemePreview(hm.get(FIRST).toString(),hm.get(LAST).toString()));
-/*
-                String a;
-                a = hm.get(FIRST).toString();
-                textView3.setText(a);*/
-                //a = myBooks.get("firstname").toString();
-
-                //ImageView imageView = (ImageView)findViewById(R.id.imageView);
-               // Picasso.with(MainActivity.this).load(a).into(imageView);
-
-                //дальше добавляем полученные параметры в наш адаптер
-              /*  SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, myBooks, R.layout.list,
-                        new String[] { FIRST, LAST }, new int[] { R.id.text1, R.id.text2 });
-                //выводим в листвбю
-                listView.setAdapter(adapter);
-                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);*/
 
             }
         } catch (JSONException e) {

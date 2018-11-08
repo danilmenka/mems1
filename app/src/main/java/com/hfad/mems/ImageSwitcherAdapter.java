@@ -1,9 +1,9 @@
 package com.hfad.mems;
-
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +33,7 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Uri uri = Uri.parse(urls.get(position));
         Picasso.with(context).load(uri).into(holder.image);
+
     }
 
     @Override
