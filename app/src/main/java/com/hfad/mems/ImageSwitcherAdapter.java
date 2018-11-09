@@ -17,7 +17,6 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
     private Context context;
     private List<String> urls;
     private List<String> date;
-
     public ImageSwitcherAdapter(Context context, List<String> urls, List<String> date) {
         this.context = context;
         this.urls = urls;
@@ -36,9 +35,7 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
         Uri uri1 = Uri.parse(date.get(position));
         Picasso.with(context).load(uri).into(holder.image);
         holder.textDate.setText(uri1.toString());
-
-
-    }
+        }
 
     @Override
     public int getItemCount() {
