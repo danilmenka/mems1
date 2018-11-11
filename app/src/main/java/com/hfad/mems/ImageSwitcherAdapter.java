@@ -1,5 +1,6 @@
 package com.hfad.mems;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdapter.MyViewHolder> {
@@ -30,17 +32,30 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Uri uri = Uri.parse(urls.get(position));
         Uri uri1 = Uri.parse(date.get(position));
         Picasso.with(context).load(uri).into(holder.image);
         holder.textDate.setText(uri1.toString());
+        holder.itemView.setTag(uri1);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context,memesTape.class);
+                intent.putExtra("date",holder.itemView.getTag().toString());
+                context.startActivity(intent);
+            }
+        });
         }
 
     @Override
     public int getItemCount() {
         return urls.size();
     }
+
+
+
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
         private TextView textDate;
@@ -50,5 +65,6 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
            textDate = itemView.findViewById(R.id.textDate);
         }
     }
+
 
 }

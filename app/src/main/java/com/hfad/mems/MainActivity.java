@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         memesPreview = new ArrayList<>();
        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
