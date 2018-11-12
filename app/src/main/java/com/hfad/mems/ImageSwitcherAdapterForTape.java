@@ -11,39 +11,26 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
-public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdapter.MyViewHolder> {
-
+public class ImageSwitcherAdapterForTape extends RecyclerView.Adapter<ImageSwitcherAdapterForTape.MyViewHolder> {
     private Context context;
     private List<String> urls;
-    private List<String> date;
-    public ImageSwitcherAdapter(Context context, List<String> urls, List<String> date) {
+    public ImageSwitcherAdapterForTape(Context context, List<String> urls) {
         this.context = context;
         this.urls = urls;
-        this.date = date;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_for_tape, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Uri uri = Uri.parse(urls.get(position));
-        Uri uri1 = Uri.parse(date.get(position));
         Picasso.with(context).load(uri).into(holder.image);
-        holder.textDate.setText(uri1.toString());
-        holder.itemView.setTag(uri1);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context,memesTape.class);
-                intent.putExtra("date",holder.itemView.getTag().toString());
-                context.startActivity(intent);
-            }
-        });
-        }
+
+    }
 
     @Override
     public int getItemCount() {
@@ -55,13 +42,9 @@ public class ImageSwitcherAdapter extends RecyclerView.Adapter<ImageSwitcherAdap
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
-        private TextView textDate;
         public MyViewHolder(View itemView) {
             super(itemView);
-           image = itemView.findViewById(R.id.imageView11);
-           textDate = itemView.findViewById(R.id.textDate);
+            image = itemView.findViewById(R.id.imageViewTape);
         }
     }
-
-
 }

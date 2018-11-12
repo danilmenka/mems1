@@ -72,43 +72,42 @@ public class MainActivity extends AppCompatActivity {
 
     class MyAsyncTask extends AsyncTask<String, String, String> {
 
-        String answerHTTP;
-        String server = "http://memeswithyou.site/memes/server.php";
+    String answerHTTP;
+    String server = "http://memeswithyou.site/memes/server.php";
 
-        @Override
-        protected void onPreExecute() {
-            date=(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
-            dialog = new ProgressDialog(MainActivity.this);
-            dialog.setMessage("Загрузка...");
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(true);
-            dialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            HashMap<String, String> postDataParams = new HashMap<String, String>();
-            postDataParams.put("request", "main_screen");
-            postDataParams.put("date", date);
-            answerHTTP = performGetCall(server, postDataParams);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            dialog.dismiss();
-            super.onPostExecute(result);
-            JSONURL(answerHTTP);
-            for (int i=0;i<memesPreview.size();i++){
-                dates.add(memesPreview.get(i).datePreview);
-                urls.add( memesPreview.get(i).nameImgPreview);
-            }
-            ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(MainActivity.this,urls,dates);
-            recyclerView.setAdapter(adapter);
-        }
+    @Override
+    protected void onPreExecute() {
+        date=(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Загрузка...");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(true);
+        dialog.show();
+        super.onPreExecute();
     }
+
+    @Override
+    protected String doInBackground(String... params) {
+        HashMap<String, String> postDataParams = new HashMap<String, String>();
+        postDataParams.put("request", "main_screen");
+        postDataParams.put("date", date);
+        answerHTTP = performGetCall(server, postDataParams);
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        dialog.dismiss();
+        super.onPostExecute(result);
+        JSONURL(answerHTTP);
+        for (int i=0;i<memesPreview.size();i++){
+            dates.add(memesPreview.get(i).datePreview);
+            urls.add( memesPreview.get(i).nameImgPreview);
+        }
+        ImageSwitcherAdapter adapter = new ImageSwitcherAdapter(MainActivity.this,urls,dates);
+        recyclerView.setAdapter(adapter);
+    }
+}
 
     public String performGetCall(String requestURL,
                                  HashMap<String, String> getDataParams) {
@@ -192,13 +191,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class MemePreview {
-        String nameImgPreview;
-        String datePreview;
-        MemePreview(String nameImgPreview,String datePreview){
-            this.nameImgPreview = nameImgPreview;
-            this.datePreview = datePreview;
-        }
-
+public class MemePreview {
+    String nameImgPreview;
+    String datePreview;
+    MemePreview(String nameImgPreview,String datePreview){
+        this.nameImgPreview = nameImgPreview;
+        this.datePreview = datePreview;
     }
+
+}
 }
