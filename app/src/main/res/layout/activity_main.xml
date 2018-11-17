@@ -4,30 +4,14 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/colorCustom"
     >
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/none" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/recycler"
+        android:background="@color/colorCustom"
         >
 
     </android.support.v7.widget.RecyclerView>

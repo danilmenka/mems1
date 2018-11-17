@@ -21,6 +21,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +42,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button;
     private String date;
     private static ArrayList<HashMap<String, Object>> myBooks;
     private static final String FIRST = "firstname";
@@ -50,24 +51,17 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List <String> urls = new ArrayList<>();
     List <String> dates = new ArrayList<>();
+    TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler);
-        button = (Button)findViewById(R.id.button);
-
         myBooks = new ArrayList<HashMap<String, Object>>();
         memesPreview = new ArrayList<>();
        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MyAsyncTask().execute();
-
-            }
-        });
+        new MyAsyncTask().execute();
     }
 
     class MyAsyncTask extends AsyncTask<String, String, String> {
@@ -92,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         postDataParams.put("request", "main_screen");
         postDataParams.put("date", date);
         answerHTTP = performGetCall(server, postDataParams);
+
         return null;
     }
 
@@ -179,13 +174,14 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(result);
             JSONArray urls = json.getJSONArray("response");
             for (int i = 0; i < urls.length(); i++) {
+                if (urls.getString(i).toString()!="false"){
                 HashMap<String, Object> hm;
                 hm = new HashMap<String, Object>();
                 hm.put(FIRST, urls.getJSONObject(i).getString("link_preview").toString());
                 hm.put(LAST, urls.getJSONObject(i).getString("date").toString());
                 myBooks.add(hm);
                 memesPreview.add(new MemePreview(hm.get(FIRST).toString(),hm.get(LAST).toString()));
-            }
+            }else {            Log.e("log_tag", "false grabber");}}
         } catch (JSONException e) {
             Log.e("log_tag", "Error parsing data " + e.toString());
         }

@@ -3,23 +3,11 @@ package com.hfad.mems;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
@@ -33,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -63,7 +50,6 @@ public class memesTape extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.textForTape);
         textView.setText(date);
-        Log.e("LIVFF", "fr0 " + urls.size());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         new MySecondAsyncTask().execute();
@@ -99,7 +85,6 @@ public class memesTape extends AppCompatActivity {
             for (int i=0;i<memes.size();i++){
                 urls.add( memes.get(i).nameImg);
             }
-            Log.e("LIVFF", "fr " + urls.size());
             ImageSwitcherAdapterForTape adapterForTape = new ImageSwitcherAdapterForTape(memesTape.this,urls);
             recyclerView.setAdapter(adapterForTape);
         }
